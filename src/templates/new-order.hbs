@@ -1,0 +1,16 @@
+<div class="card">
+  <h2>🎉 Nueva orden recibida</h2>
+  <p>¡Gracias por tu compra! Se ha creado la orden <strong>#{{orderId}}</strong>.</p>
+  <p style="font-size: 18px;">Total: <strong>${{orderTotal}}</strong></p>
+  
+  {{#if items}}
+    <h3>📋 Detalles del pedido</h3>
+    <ul style="background: rgba(255,255,255,0.02); padding: 16px; border-radius: 8px; margin: 16px 0;">
+      {{#each items}}
+        <li><strong>{{this.name}}</strong> × {{this.qty}} — <strong>${{this.price}}</strong></li>
+      {{/each}}
+    </ul>
+  {{/if}}
+  
+  <p>Te notificaremos cuando tu pedido esté en camino. 🚚</p>
+</div>
