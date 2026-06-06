@@ -1,0 +1,16 @@
+<div class="card">
+  <h2>🧾 {{tipoLabel}}</h2>
+  <p>Estimado/a <strong>{{destinatarioNombre}}</strong>,</p>
+  <p>Adjuntamos el comprobante electrónico emitido por <strong>{{razonSocialEmisor}}</strong>.</p>
+</div>
+
+<div class="card">
+  <table width="100%" style="font-size:14px;">
+    {{#if numero}}<tr><td class="muted">Número</td><td align="right"><strong>{{numero}}</strong></td></tr>{{/if}}
+    {{#if fechaEmision}}<tr><td class="muted">Fecha de emisión</td><td align="right">{{fechaEmision}}</td></tr>{{/if}}
+    {{#if total}}<tr><td class="muted">Total</td><td align="right"><strong>{{total}}</strong></td></tr>{{/if}}
+    {{#if claveAcceso}}<tr><td class="muted">Clave de acceso</td><td align="right" style="word-break:break-all;font-size:11px;">{{claveAcceso}}</td></tr>{{/if}}
+  </table>
+</div>
+
+<p class="muted">Este correo incluye el RIDE en formato PDF{{#if conXml}} y el archivo XML autorizado{{/if}}. Si tiene dudas sobre este documento, responda a este correo.</p>
