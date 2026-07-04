@@ -1,26 +1,29 @@
-# Mail Service (Node.js + Gmail)
+# Mail Service (Node.js + SMTP)
 
-API para enviar correos usando Gmail con plantillas HTML (Handlebars) y seguridad por `x-api-key`.
+API para enviar correos por SMTP (ej. Hostinger) con plantillas HTML (Handlebars) y seguridad por `x-api-key`.
 
 ## Requisitos
 - Node.js 18+
-- Cuenta de Gmail con App Password (recomendado)
+- Un buzón de correo con acceso SMTP (ej. Hostinger, Gmail, etc.)
 
-### App Password en Gmail
-1. Activa la verificación en dos pasos.
-2. En tu cuenta Google → Seguridad → Contraseñas de aplicaciones.
-3. Genera un App Password para "Correo" y "Otro".
-4. Guarda el valor y ponlo en `GMAIL_PASS`.
+### Datos SMTP de Hostinger
+- Host: `smtp.hostinger.com`
+- Puerto: `465` (SSL) o `587` (STARTTLS)
+- Usuario: la dirección completa del buzón (ej. `tucorreo@tudominio.com`)
+- Contraseña: la del buzón (la que definiste al crear la cuenta en Hostinger)
 
 ## Configuración
 1. Copia `.env.sample` a `.env` y edita valores.
 
 ```
 API_KEY=pon-tu-api-key-segura-aqui
-GMAIL_USER=tu_email@gmail.com
-GMAIL_PASS=tu_app_password_de_gmail
+SMTP_HOST=smtp.hostinger.com
+SMTP_PORT=465
+SMTP_SECURE=true
+SMTP_USER=tucorreo@tudominio.com
+SMTP_PASS=la_contraseña_del_buzón
 MAIL_FROM_NAME=Tu Servicio
-MAIL_FROM_EMAIL=tu_email@gmail.com
+MAIL_FROM_EMAIL=tucorreo@tudominio.com
 PORT=3000
 ```
 

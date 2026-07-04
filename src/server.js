@@ -15,13 +15,18 @@ const __dirname = path.dirname(__filename);
 // Config
 const PORT = process.env.PORT || 3000;
 const API_KEY = process.env.API_KEY;
-const GMAIL_USER = process.env.GMAIL_USER;
-const GMAIL_PASS = process.env.GMAIL_PASS;
+const SMTP_HOST = process.env.SMTP_HOST || 'smtp.hostinger.com';
+const SMTP_PORT = Number(process.env.SMTP_PORT || 465);
+const SMTP_SECURE = process.env.SMTP_SECURE
+  ? process.env.SMTP_SECURE === 'true'
+  : SMTP_PORT === 465;
+const SMTP_USER = process.env.SMTP_USER;
+const SMTP_PASS = process.env.SMTP_PASS;
 const MAIL_FROM_NAME = process.env.MAIL_FROM_NAME || 'Mail Service';
-const MAIL_FROM_EMAIL = process.env.MAIL_FROM_EMAIL || GMAIL_USER;
+const MAIL_FROM_EMAIL = process.env.MAIL_FROM_EMAIL || SMTP_USER;
 
 if (!API_KEY) console.warn('WARN: API_KEY no definido en .env');
-if (!GMAIL_USER || !GMAIL_PASS) console.warn('WARN: GMAIL_USER / GMAIL_PASS no definidos');
+if (!SMTP_USER || !SMTP_PASS) console.warn('WARN: SMTP_USER / SMTP_PASS no definidos');
 
 // Express app
 const app = express();
@@ -43,12 +48,14 @@ app.engine('handlebars', engine());
 app.set('view engine', 'handlebars');
 app.set('views', path.join(__dirname, 'templates'));
 
-// Nodemailer transporter (Gmail SMTP)
+// Nodemailer transporter (SMTP genérico, ej. Hostinger)
 const transporter = createTransport({
-  service: 'gmail',
+  host: SMTP_HOST,
+  port: SMTP_PORT,
+  secure: SMTP_SECURE, // true para puerto 465, false para 587 (STARTTLS)
   auth: {
-    user: GMAIL_USER,
-    pass: GMAIL_PASS, // App Password recomendado
+    user: SMTP_USER,
+    pass: SMTP_PASS,
   },
 });
 
