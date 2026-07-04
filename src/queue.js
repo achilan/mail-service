@@ -7,7 +7,7 @@
 
 import { randomUUID } from 'node:crypto';
 
-const CONCURRENCY = Number(process.env.QUEUE_CONCURRENCY || 2);
+const CONCURRENCY = Number(process.env.QUEUE_CONCURRENCY || 5);
 const MAX_ATTEMPTS = Number(process.env.QUEUE_MAX_ATTEMPTS || 3);
 const RETRY_BASE_MS = Number(process.env.QUEUE_RETRY_BASE_MS || 2000);
 // Tiempo que se conserva un job terminado antes de limpiarlo (para consultas de estado).

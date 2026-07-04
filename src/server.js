@@ -49,6 +49,8 @@ app.set('view engine', 'handlebars');
 app.set('views', path.join(__dirname, 'templates'));
 
 // Nodemailer transporter (SMTP genérico, ej. Hostinger)
+// pool: reutiliza conexiones SMTP en vez de abrir/cerrar una por correo
+// (el handshake TLS por envío es lo que hacía todo lentísimo).
 const transporter = createTransport({
   host: SMTP_HOST,
   port: SMTP_PORT,
@@ -57,6 +59,12 @@ const transporter = createTransport({
     user: SMTP_USER,
     pass: SMTP_PASS,
   },
+  pool: true,
+  maxConnections: Number(process.env.SMTP_MAX_CONNECTIONS || 5),
+  maxMessages: Number(process.env.SMTP_MAX_MESSAGES || 100),
+  connectionTimeout: Number(process.env.SMTP_CONNECTION_TIMEOUT || 10000),
+  greetingTimeout: Number(process.env.SMTP_GREETING_TIMEOUT || 10000),
+  socketTimeout: Number(process.env.SMTP_SOCKET_TIMEOUT || 20000),
 });
 
 // Attach Handlebars templates to Nodemailer
