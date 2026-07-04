@@ -241,7 +241,20 @@ const TIPO_DOC_LABELS = {
   retencion: 'Comprobante de Retención',
   guia_remision: 'Guía de Remisión',
   liquidacion: 'Liquidación de Compra',
+  cotizacion: 'Cotización',
 };
+
+// Normaliza el tipo recibido: minúsculas, sin tildes y espacios/guiones -> "_".
+// Así "Cotización", "COTIZACION" o "nota de credito" mapean a la clave canónica.
+function normalizeTipoDocumento(value) {
+  if (typeof value !== 'string') return '';
+  return value
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .trim()
+    .toLowerCase()
+    .replace(/[\s-]+/g, '_');
+}
 
 // Obtiene el contenido del PDF/XML como Buffer, ya sea desde base64 o desde una URL.
 async function resolveAttachment({ base64, url }) {
@@ -305,9 +318,12 @@ app.post('/documents/send', requireApiKey, (req, res) => {
   try {
     const { to, tipoDocumento, adjuntos = {} } = req.body || {};
     if (!validateEmailString(to)) return res.status(400).json({ error: 'Invalid recipient' });
-    if (!tipoDocumento || !TIPO_DOC_LABELS[tipoDocumento]) {
+    const tipoNormalizado = normalizeTipoDocumento(tipoDocumento);
+    if (!tipoNormalizado || !TIPO_DOC_LABELS[tipoNormalizado]) {
       return res.status(400).json({ error: 'tipoDocumento inválido', validos: Object.keys(TIPO_DOC_LABELS) });
     }
+    // Guarda la clave canónica para que el worker use siempre el valor correcto.
+    req.body.tipoDocumento = tipoNormalizado;
     if (!adjuntos.pdfBase64 && !adjuntos.pdfUrl) {
       return res.status(400).json({ error: 'Se requiere adjuntos.pdfBase64 o adjuntos.pdfUrl' });
     }
