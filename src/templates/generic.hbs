@@ -1,4 +1,23 @@
 <div class="card">
   <h2>{{title}}</h2>
-  <p>{{message}}</p>
+  {{{message}}}
 </div>
+
+{{#if details}}
+<div class="card">
+  <table width="100%" style="font-size:14px;">
+    {{#each details}}
+      <tr>
+        <td class="muted" style="padding: 6px 0;">{{this.label}}</td>
+        <td align="right" style="padding: 6px 0;"><strong>{{this.value}}</strong></td>
+      </tr>
+    {{/each}}
+  </table>
+</div>
+{{/if}}
+
+{{#if ctaUrl}}
+<div style="text-align:center; margin-top: 8px; margin-bottom: 8px;">
+  <a class="btn" href="{{ctaUrl}}">{{ctaText}}</a>
+</div>
+{{/if}}
