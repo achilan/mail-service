@@ -112,7 +112,16 @@ app.get('/health', (req, res) => {
 app.get('/preview/:template', (req, res) => {
   const { template } = req.params;
   const sampleData = {
-    generic: { title: 'Bienvenido', message: 'Gracias por registrarte en nuestro servicio.' },
+    generic: {
+      title: '🎟️ Tu pase para la Clínica Deportiva PAFIDE 2026',
+      message: '<p>Hola <strong>Anthony Chilan</strong>, tu inscripción a la <strong>Clínica Deportiva PAFIDE 2026 — Taller Práctico</strong> quedó registrada.</p><p>Adjuntamos tu pase en PDF con el código QR. Preséntalo en la entrada del evento, impreso o desde la pantalla del teléfono. Es personal e intransferible.</p><p>Tu pago ya fue verificado por la organización.</p>',
+      details: [
+        { label: 'Código de acceso', value: 'PAFIDE-SDGDY-ZUNRR' },
+        { label: 'Documento',        value: '1316262193' },
+        { label: 'Fecha',            value: 'Sábado a partir de las 08:00 AM' },
+        { label: 'Lugar',            value: 'UNESUM — Jipijapa, Manabí, Ecuador' }
+      ]
+    },
     'login-success': { userName: 'Anthony' },
     'new-order': { 
       orderId: 'A-001', 
@@ -187,6 +196,26 @@ app.post('/notify/new-order', requireApiKey, async (req, res) => {
       subject,
       template: 'new-order',
       context: { orderId, orderTotal, items },
+    });
+    res.json({ ok: true, id: info.messageId });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Send failed' });
+  }
+});
+
+// Generic document / general-purpose send
+app.post('/notify/generic', requireApiKey, async (req, res) => {
+  try {
+    const { to, subject, title, message, details = [], ctaUrl, ctaText } = req.body || {};
+    if (!validateEmailString(to)) return res.status(400).json({ error: 'Invalid recipient' });
+    if (!subject) return res.status(400).json({ error: 'Subject required' });
+
+    const info = await sendTemplateMail({
+      to,
+      subject,
+      template: 'generic',
+      context: { title: title || subject, message, details, ctaUrl, ctaText },
     });
     res.json({ ok: true, id: info.messageId });
   } catch (err) {
@@ -295,9 +324,9 @@ setHandler(async (payload) => {
     const attachments = [{ filename: `${baseName}.pdf`, content: pdfBuffer, contentType: 'application/pdf' }];
     const info = await transporter.sendMail({
       from, to, cc, bcc, subject,
-      template: 'notification',
+      template: 'generic',
       attachments,
-      context: { title: subject, message: body, MAIL_FROM_NAME, MAIL_FROM_EMAIL, subject },
+      context: { title: subject, message: body, details: payload.details, MAIL_FROM_NAME, MAIL_FROM_EMAIL, subject },
     });
     return { messageId: info.messageId };
   }
