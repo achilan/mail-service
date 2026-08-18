@@ -250,6 +250,7 @@ const TIPO_DOC_LABELS = {
   guia_remision: 'Guía de Remisión',
   liquidacion: 'Liquidación de Compra',
   cotizacion: 'Cotización',
+  general: 'General',
 };
 
 // Normaliza el tipo recibido: minúsculas, sin tildes y espacios/guiones -> "_".
@@ -280,7 +281,26 @@ setHandler(async (payload) => {
   const {
     to, cc, bcc, destinatarioNombre = 'Cliente',
     tipoDocumento, documento = {}, adjuntos = {}, subject: customSubject,
+    title, body,
   } = payload;
+
+  const from = `${MAIL_FROM_NAME} <${MAIL_FROM_EMAIL}>`;
+
+  // Tipo general: envía título, cuerpo y PDF sin datos de comprobante.
+  if (tipoDocumento === 'general') {
+    const subject = customSubject || title || 'Documento';
+    const pdfBuffer = await resolveAttachment({ base64: adjuntos.pdfBase64, url: adjuntos.pdfUrl });
+    if (!pdfBuffer) throw new Error('Falta el PDF (adjuntos.pdfBase64 o adjuntos.pdfUrl)');
+    const baseName = (title || 'documento').replace(/[^\w.-]/g, '_');
+    const attachments = [{ filename: `${baseName}.pdf`, content: pdfBuffer, contentType: 'application/pdf' }];
+    const info = await transporter.sendMail({
+      from, to, cc, bcc, subject,
+      template: 'notification',
+      attachments,
+      context: { title: subject, message: body, MAIL_FROM_NAME, MAIL_FROM_EMAIL, subject },
+    });
+    return { messageId: info.messageId };
+  }
 
   const tipoLabel = TIPO_DOC_LABELS[tipoDocumento] || 'Comprobante Electrónico';
   const numero = documento.numero || '';
@@ -295,7 +315,6 @@ setHandler(async (payload) => {
   const attachments = [{ filename: `${baseName}.pdf`, content: pdfBuffer, contentType: 'application/pdf' }];
   if (xmlBuffer) attachments.push({ filename: `${baseName}.xml`, content: xmlBuffer, contentType: 'application/xml' });
 
-  const from = `${MAIL_FROM_NAME} <${MAIL_FROM_EMAIL}>`;
   const info = await transporter.sendMail({
     from,
     to,
