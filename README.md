@@ -20,6 +20,20 @@ npm test                 # 86 tests: seguridad, contratos heredados, API de plan
 npm run build && npm start
 ```
 
+Producción con pm2 (sin `--watch`, con apagado ordenado):
+
+```bash
+npm ci                         # en el servidor; no copies node_modules desde otra máquina
+pm2 start ecosystem.config.cjs
+pm2 save
+```
+
+Si no arranca, el motivo aparece como `[mail-service] NO SE PUDO ARRANCAR: …` en `pm2 logs xmail`. Causas típicas:
+- **Falta `API_KEY`/`API_KEYS` en `.env`**: por seguridad ya no arranca sin autenticación.
+- **Faltan dependencias**: ejecuta `npm ci`.
+- **Node < 20**: actualiza Node.
+- **Puerto en uso**: hay otra instancia corriendo.
+
 Docker:
 
 ```bash
