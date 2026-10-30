@@ -1,0 +1,13 @@
+{{> hero icon='password' tone='brand' eyebrow='Verificación' title=(fallback title 'Confirma que eres tú')}}
+
+<div class="em-content">
+  <p>Hola{{#if userName}} <strong>{{userName}}</strong>{{/if}}, usa el siguiente código para {{fallback purpose 'continuar'}}.</p>
+</div>
+
+{{> code value=code label='Tu código de verificación'}}
+
+<p class="em-text" style="margin:0 0 28px;font-size:14px;line-height:22px;text-align:center;color:#475467;">El código vence en <strong class="em-heading" style="color:#101828;">{{fallback expiresIn '10 minutos'}}</strong>.</p>
+
+{{#> callout tone='danger' icon='shield' title='Nunca compartas este código'}}{{brand.name}} jamás te lo pedirá por teléfono, chat ni correo. Si no intentaste acceder, ignora este mensaje.{{/callout}}
+
+{{> signature}}

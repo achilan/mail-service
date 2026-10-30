@@ -1,0 +1,9 @@
+{{!-- Contenedor gris suave para datos. Uso: {{#> panel heading="Resumen"}}{{> row ...}}{{/panel}} --}}
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="em-panel" bgcolor="#F9FAFB" style="margin:4px 0 28px;background-color:#F9FAFB;border:1px solid #EAECF0;border-radius:16px;border-collapse:separate;">
+  {{#if heading}}
+  <tr>
+    <td colspan="2" class="em-muted" style="padding:18px 24px 2px;font-size:12px;line-height:18px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#667085;">{{heading}}</td>
+  </tr>
+  {{/if}}
+  {{> @partial-block}}
+</table>

@@ -1,0 +1,4 @@
+{{!-- Lista de datos [{ label, value, mono? }]. Uso: {{> details items=details heading="Detalles"}} --}}
+{{#> panel heading=heading}}
+  {{#each items}}{{> row label=label value=value mono=mono first=@first}}{{/each}}
+{{/panel}}

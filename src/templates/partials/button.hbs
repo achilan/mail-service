@@ -1,0 +1,11 @@
+{{!-- Botón "bulletproof" (también se ve bien en Outlook de escritorio).
+      Uso: {{> button url=ctaUrl text="Ver detalle" color="#…" align="center"}} --}}
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:8px 0 28px;"><tr><td align="{{fallback align 'left'}}">
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" class="em-btn" style="border-collapse:separate;">
+  <tr>
+    <td align="center" bgcolor="{{fallback color @root.brand.primaryColor}}" style="border-radius:12px;background-color:{{fallback color @root.brand.primaryColor}};box-shadow:0 1px 2px rgba(16,24,40,0.08);">
+      <a href="{{safeUrl url}}" target="_blank" style="display:inline-block;padding:15px 28px;border-radius:12px;background-color:{{fallback color @root.brand.primaryColor}};color:#FFFFFF;font-size:16px;font-weight:600;line-height:20px;text-decoration:none;mso-padding-alt:0;"><!--[if mso]><i style="mso-font-width:150%;mso-text-raise:30px" hidden>&emsp;</i><span style="mso-text-raise:15px;"><![endif]-->{{fallback text 'Continuar'}}&nbsp;&rarr;<!--[if mso]></span><i style="mso-font-width:150%;" hidden>&emsp;&#8203;</i><![endif]--></a>
+    </td>
+  </tr>
+</table>
+</td></tr></table>

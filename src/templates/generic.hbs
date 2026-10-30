@@ -1,23 +1,19 @@
-<div class="card">
-  <h2>{{title}}</h2>
-  {{{message}}}
-</div>
+{{> hero icon=(fallback icon 'mail') tone=tone eyebrow=eyebrow title=title subtitle=subtitle}}
+
+{{#if message}}
+<div class="em-content" style="margin:0 0 12px;">{{{safe message}}}</div>
+{{/if}}
 
 {{#if details}}
-<div class="card">
-  <table width="100%" style="font-size:14px;">
-    {{#each details}}
-      <tr>
-        <td class="muted" style="padding: 6px 0;">{{this.label}}</td>
-        <td align="right" style="padding: 6px 0;"><strong>{{this.value}}</strong></td>
-      </tr>
-    {{/each}}
-  </table>
-</div>
+  {{> details items=details heading=(fallback detailsTitle 'Detalles')}}
 {{/if}}
 
 {{#if ctaUrl}}
-<div style="text-align:center; margin-top: 8px; margin-bottom: 8px;">
-  <a class="btn" href="{{ctaUrl}}">{{ctaText}}</a>
-</div>
+  {{> button url=ctaUrl text=(fallback ctaText 'Ver más')}}
 {{/if}}
+
+{{#if note}}
+  {{> callout tone='neutral' icon='lightbulb' text=note}}
+{{/if}}
+
+{{> signature}}

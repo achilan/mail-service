@@ -1,0 +1,75 @@
+{{> hero icon='confirmation_number' tone='brand' eyebrow='Tu entrada está lista' title=eventName}}
+
+{{#if message}}
+<div class="em-content" style="margin:0 0 12px;">{{{safe message}}}</div>
+{{else}}
+<div class="em-content"><p>Hola{{#if attendeeName}} <strong>{{attendeeName}}</strong>{{/if}}, tu inscripción quedó registrada. Presenta este pase en la entrada, impreso o desde tu teléfono.</p></div>
+{{/if}}
+
+<!-- Ticket -->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:8px 0 28px;border-collapse:separate;border-radius:20px;box-shadow:0 12px 32px -12px rgba(16,24,40,0.25);">
+  <tr>
+    <td bgcolor="{{brand.primaryColor}}" style="padding:26px 28px 24px;border-radius:20px 20px 0 0;background-color:{{brand.primaryColor}};background-image:linear-gradient(135deg,{{brand.primaryColor}} 0%,{{brand.accentColor}} 100%);">
+      <p style="margin:0 0 6px;font-size:11px;line-height:16px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.8);">{{fallback ticketType 'Admisión general'}}</p>
+      <p style="margin:0 0 20px;font-size:22px;line-height:28px;font-weight:800;letter-spacing:-0.01em;color:#FFFFFF;">{{eventName}}</p>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          {{#if eventDate}}
+          <td class="em-stack em-stack-pad" valign="top" width="50%" style="padding-right:12px;">
+            <p style="margin:0;font-size:11px;line-height:16px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.75);">{{icon 'calendar_month' '#FFFFFF' 14 inline=true}}Fecha</p>
+            <p style="margin:2px 0 0;font-size:15px;line-height:22px;font-weight:600;color:#FFFFFF;">{{eventDate}}</p>
+          </td>
+          {{/if}}
+          {{#if venue}}
+          <td class="em-stack" valign="top" width="50%">
+            <p style="margin:0;font-size:11px;line-height:16px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.75);">{{icon 'location_on' '#FFFFFF' 14 inline=true}}Lugar</p>
+            <p style="margin:2px 0 0;font-size:15px;line-height:22px;font-weight:600;color:#FFFFFF;">{{venue}}</p>
+          </td>
+          {{/if}}
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td class="em-panel" bgcolor="#FFFFFF" style="padding:0;background-color:#FFFFFF;border:1px solid #EAECF0;border-top:0;border-radius:0 0 20px 20px;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr><td style="padding:0 20px;"><div class="em-divider" style="border-top:2px dashed #D0D5DD;height:0;line-height:0;font-size:0;">&nbsp;</div></td></tr>
+        <tr>
+          <td style="padding:22px 28px 26px;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+                <td class="em-stack em-stack-pad" valign="middle">
+                  {{#if attendeeName}}
+                  <p class="em-muted" style="margin:0;font-size:11px;line-height:16px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#667085;">Asistente</p>
+                  <p class="em-heading" style="margin:2px 0 14px;font-size:16px;line-height:24px;font-weight:700;color:#101828;">{{attendeeName}}</p>
+                  {{/if}}
+                  {{#if accessCode}}
+                  <p class="em-muted" style="margin:0;font-size:11px;line-height:16px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#667085;">Código de acceso</p>
+                  <p class="em-heading" style="margin:2px 0 0;font-family:'SF Mono',SFMono-Regular,Menlo,Consolas,monospace;font-size:18px;line-height:26px;font-weight:700;letter-spacing:0.06em;color:#101828;">{{accessCode}}</p>
+                  {{/if}}
+                </td>
+                {{#if qrUrl}}
+                <td class="em-stack" valign="middle" align="right" width="132">
+                  <img src="{{safeUrl qrUrl}}" alt="Código QR de acceso" width="120" height="120" style="display:block;width:120px;height:120px;border-radius:12px;border:1px solid #EAECF0;background:#FFFFFF;padding:6px;">
+                </td>
+                {{/if}}
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+
+{{#if details}}
+  {{> details items=details heading='Información adicional'}}
+{{/if}}
+
+{{#if ctaUrl}}
+  {{> button url=ctaUrl text=(fallback ctaText 'Ver mi entrada')}}
+{{/if}}
+
+{{> callout tone='neutral' icon='info' text=(fallback note 'Tu pase es personal e intransferible. Llega con unos minutos de anticipación.')}}
+
+{{> signature signoff='¡Nos vemos pronto!'}}

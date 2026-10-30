@@ -1,16 +1,55 @@
-<div class="card">
-  <h2>🧾 {{tipoLabel}}</h2>
+{{> hero icon='receipt_long' tone='brand' eyebrow='Comprobante electrónico' title=tipoLabel}}
+
+<div class="em-content">
   <p>Estimado/a <strong>{{destinatarioNombre}}</strong>,</p>
-  <p>Adjuntamos el comprobante electrónico emitido por <strong>{{razonSocialEmisor}}</strong>.</p>
+  <p><strong>{{razonSocialEmisor}}</strong> le ha emitido el siguiente comprobante electrónico. Encontrará los archivos adjuntos en este correo.</p>
 </div>
 
-<div class="card">
-  <table width="100%" style="font-size:14px;">
-    {{#if numero}}<tr><td class="muted">Número</td><td align="right"><strong>{{numero}}</strong></td></tr>{{/if}}
-    {{#if fechaEmision}}<tr><td class="muted">Fecha de emisión</td><td align="right">{{fechaEmision}}</td></tr>{{/if}}
-    {{#if total}}<tr><td class="muted">Total</td><td align="right"><strong>{{total}}</strong></td></tr>{{/if}}
-    {{#if claveAcceso}}<tr><td class="muted">Clave de acceso</td><td align="right" style="word-break:break-all;font-size:11px;">{{claveAcceso}}</td></tr>{{/if}}
-  </table>
-</div>
+{{#if total}}
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:4px 0 16px;border-collapse:separate;">
+  <tr>
+    <td bgcolor="{{toneColor 'brand' 'bg'}}" style="padding:22px 24px;background-color:{{toneColor 'brand' 'bg'}};border:1px solid {{toneColor 'brand' 'border'}};border-radius:16px;">
+      <p style="margin:0 0 4px;font-size:12px;line-height:18px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:{{brand.primaryColor}};">Valor total</p>
+      <p class="em-amount" style="margin:0;font-size:34px;line-height:42px;font-weight:800;letter-spacing:-0.02em;color:#101828;">{{formatMoney total currency}}</p>
+    </td>
+  </tr>
+</table>
+{{/if}}
 
-<p class="muted">Este correo incluye el RIDE en formato PDF{{#if conXml}} y el archivo XML autorizado{{/if}}. Si tiene dudas sobre este documento, responda a este correo.</p>
+{{#> panel heading='Datos del comprobante'}}
+  {{> row label='Tipo' value=tipoLabel first=true}}
+  {{#if numero}}{{> row label='Número' value=numero}}{{/if}}
+  {{#if fechaEmision}}{{> row label='Fecha de emisión' value=fechaEmision}}{{/if}}
+  {{> row label='Emisor' value=razonSocialEmisor}}
+  {{#if claveAcceso}}{{> row label='Clave de acceso' value=claveAcceso mono=true}}{{/if}}
+{{/panel}}
+
+<p class="em-muted" style="margin:0 0 10px;font-size:12px;line-height:18px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#667085;">Archivos adjuntos</p>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 28px;">
+  <tr>
+    <td class="em-stack em-stack-pad" width="50%" valign="top" style="padding:0 6px 0 0;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="em-panel" style="border:1px solid #EAECF0;border-radius:12px;border-collapse:separate;">
+        <tr>
+          <td width="44" style="padding:12px 0 12px 12px;"><table role="presentation" cellpadding="0" cellspacing="0" border="0" style="border-collapse:separate;"><tr><td width="40" height="40" align="center" valign="middle" bgcolor="#FEF3F2" style="width:40px;height:40px;border-radius:10px;background-color:#FEF3F2;"><table role="presentation" align="center" cellpadding="0" cellspacing="0" border="0"><tr><td>{{icon 'picture_as_pdf' '#B42318' 22}}</td></tr></table></td></tr></table></td>
+          <td style="padding:12px;"><p class="em-heading" style="margin:0;font-size:14px;line-height:20px;font-weight:600;color:#101828;">RIDE · PDF</p><p class="em-muted" style="margin:0;font-size:12px;line-height:18px;color:#667085;">Representación impresa</p></td>
+        </tr>
+      </table>
+    </td>
+    {{#if conXml}}
+    <td class="em-stack" width="50%" valign="top" style="padding:0 0 0 6px;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="em-panel" style="border:1px solid #EAECF0;border-radius:12px;border-collapse:separate;">
+        <tr>
+          <td width="44" style="padding:12px 0 12px 12px;"><table role="presentation" cellpadding="0" cellspacing="0" border="0" style="border-collapse:separate;"><tr><td width="40" height="40" align="center" valign="middle" bgcolor="#EFF8FF" style="width:40px;height:40px;border-radius:10px;background-color:#EFF8FF;"><table role="presentation" align="center" cellpadding="0" cellspacing="0" border="0"><tr><td>{{icon 'data_object' '#175CD3' 22}}</td></tr></table></td></tr></table></td>
+          <td style="padding:12px;"><p class="em-heading" style="margin:0;font-size:14px;line-height:20px;font-weight:600;color:#101828;">Comprobante · XML</p><p class="em-muted" style="margin:0;font-size:12px;line-height:18px;color:#667085;">Archivo autorizado</p></td>
+        </tr>
+      </table>
+    </td>
+    {{/if}}
+  </tr>
+</table>
+
+{{#if claveAcceso}}
+{{#> callout tone='info' icon='verified' title='Verifique su comprobante'}}Puede validar la autenticidad de este documento en el portal del SRI usando la clave de acceso.{{/callout}}
+{{/if}}
+
+{{#> fineprint}}Si tiene dudas sobre este documento, responda a este correo y le ayudaremos.{{/fineprint}}

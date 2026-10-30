@@ -1,0 +1,5 @@
+{{!-- Fila etiqueta / valor dentro de un panel. first=true quita el separador superior. --}}
+<tr>
+  <td class="em-muted em-divider" valign="top" style="padding:14px 12px 14px 24px;font-size:14px;line-height:22px;color:#667085;white-space:nowrap;{{#unless first}}border-top:1px solid #EAECF0;{{/unless}}">{{label}}</td>
+  <td class="em-heading em-divider" valign="top" align="right" style="padding:14px 24px 14px 12px;font-size:{{#if mono}}12px{{else}}14px{{/if}};line-height:22px;font-weight:600;color:{{fallback color '#101828'}};text-align:right;word-break:break-all;{{#if mono}}font-family:'SF Mono',SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:0.02em;{{/if}}{{#unless first}}border-top:1px solid #EAECF0;{{/unless}}">{{value}}</td>
+</tr>

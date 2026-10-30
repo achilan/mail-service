@@ -1,9 +1,21 @@
-<div class="card">
-  <h2>Inicio de sesión exitoso</h2>
-  <p>Hola <strong>{{userName}}</strong>, has iniciado sesión exitosamente en tu cuenta.</p>
-  <p><strong>Información de seguridad:</strong></p>
-  <ul>
-    <li>Fecha: {{now}}</li>
-    <li>Si no fuiste tú, <a href="#" style="color: var(--accent);">cambia tu contraseña</a> inmediatamente</li>
-  </ul>
+{{> hero icon='shield_lock' tone='success' eyebrow='Alerta de seguridad' title=(fallback title 'Nuevo inicio de sesión')}}
+
+<div class="em-content">
+  <p>Hola{{#if userName}} <strong>{{userName}}</strong>{{/if}}, detectamos un inicio de sesión en tu cuenta de <strong>{{brand.name}}</strong>. Si fuiste tú, no necesitas hacer nada.</p>
 </div>
+
+{{#> panel heading='Detalles del acceso'}}
+  {{> row label='Fecha y hora' value=(formatDate (fallback loginAt now) 'datetime') first=true}}
+  {{#if device}}{{> row label='Dispositivo' value=device}}{{/if}}
+  {{#if browser}}{{> row label='Navegador' value=browser}}{{/if}}
+  {{#if location}}{{> row label='Ubicación' value=location}}{{/if}}
+  {{#if ip}}{{> row label='Dirección IP' value=ip mono=true}}{{/if}}
+{{/panel}}
+
+{{#> callout tone='danger' icon='gpp_maybe' title='¿No fuiste tú?'}}Cambia tu contraseña de inmediato y cierra las sesiones abiertas. Nunca te pediremos tu contraseña por correo.{{/callout}}
+
+{{#if secureUrl}}
+  {{> button url=secureUrl text='Proteger mi cuenta' color=(toneColor 'danger' 'solid')}}
+{{/if}}
+
+{{> signature}}

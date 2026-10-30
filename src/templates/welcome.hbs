@@ -1,0 +1,29 @@
+{{#> hero icon='waving_hand' tone='brand' eyebrow='Te damos la bienvenida' subtitle=(fallback subtitle 'Tu cuenta está lista. Estos son tus primeros pasos para sacarle el máximo provecho.')}}Hola{{#if userName}} {{userName}}{{/if}}, ¡qué bueno tenerte en {{brand.name}}!{{/hero}}
+
+{{#if message}}
+<div class="em-content" style="margin:0 0 12px;">{{{safe message}}}</div>
+{{/if}}
+
+{{#if steps}}
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 24px;">
+  {{#each steps}}
+  <tr>
+    <td width="44" valign="top" style="padding:0 0 20px;">
+      <div style="width:32px;height:32px;border-radius:999px;background-color:{{toneColor 'brand' 'bg'}};border:1px solid {{toneColor 'brand' 'border'}};color:{{@root.brand.primaryColor}};font-size:14px;font-weight:800;line-height:32px;text-align:center;">{{inc @index}}</div>
+    </td>
+    <td valign="top" style="padding:4px 0 20px;">
+      <p class="em-heading" style="margin:0 0 2px;font-size:16px;line-height:24px;font-weight:700;color:#101828;">{{title}}</p>
+      <p class="em-text" style="margin:0;font-size:15px;line-height:23px;color:#475467;">{{text}}</p>
+    </td>
+  </tr>
+  {{/each}}
+</table>
+{{/if}}
+
+{{#if ctaUrl}}
+  {{> button url=ctaUrl text=(fallback ctaText 'Comenzar ahora')}}
+{{/if}}
+
+{{> divider}}
+
+{{#> fineprint}}¿Tienes preguntas? Solo responde a este correo, lo lee una persona real de nuestro equipo.{{/fineprint}}

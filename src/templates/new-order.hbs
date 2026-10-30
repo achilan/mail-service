@@ -1,16 +1,39 @@
-<div class="card">
-  <h2>🎉 Nueva orden recibida</h2>
-  <p>¡Gracias por tu compra! Se ha creado la orden <strong>#{{orderId}}</strong>.</p>
-  <p style="font-size: 18px;">Total: <strong>${{orderTotal}}</strong></p>
-  
-  {{#if items}}
-    <h3>📋 Detalles del pedido</h3>
-    <ul style="background: rgba(255,255,255,0.02); padding: 16px; border-radius: 8px; margin: 16px 0;">
-      {{#each items}}
-        <li><strong>{{this.name}}</strong> × {{this.qty}} — <strong>${{this.price}}</strong></li>
-      {{/each}}
-    </ul>
-  {{/if}}
-  
-  <p>Te notificaremos cuando tu pedido esté en camino. 🚚</p>
+{{> hero icon='shopping_bag' tone='success' eyebrow='Pedido confirmado' title=(fallback title '¡Gracias por tu compra!')}}
+
+<div class="em-content">
+  <p>Hola{{#if customerName}} <strong>{{customerName}}</strong>{{/if}}, recibimos tu orden <strong>#{{orderId}}</strong> y ya la estamos preparando. Aquí tienes el resumen.</p>
 </div>
+
+{{#> panel heading='Resumen del pedido'}}
+  {{#each items}}
+  <tr>
+    <td class="em-divider" valign="top" style="padding:16px 12px 16px 24px;{{#unless @first}}border-top:1px solid #EAECF0;{{/unless}}">
+      <p class="em-heading" style="margin:0;font-size:15px;line-height:22px;font-weight:600;color:#101828;">{{name}}</p>
+      <p class="em-muted" style="margin:2px 0 0;font-size:13px;line-height:20px;color:#667085;">{{fallback qty 1}} &times; {{formatMoney price @root.currency}}</p>
+    </td>
+    <td class="em-heading em-divider" valign="top" align="right" style="padding:16px 24px 16px 12px;font-size:15px;line-height:22px;font-weight:600;color:#101828;white-space:nowrap;{{#unless @first}}border-top:1px solid #EAECF0;{{/unless}}">{{formatMoney (multiply (fallback qty 1) price) @root.currency}}</td>
+  </tr>
+  {{/each}}
+  {{#if subtotal}}{{> row label='Subtotal' value=(formatMoney subtotal currency)}}{{/if}}
+  {{#if shipping}}{{> row label='Envío' value=(formatMoney shipping currency)}}{{/if}}
+  {{#if tax}}{{> row label='Impuestos' value=(formatMoney tax currency)}}{{/if}}
+  {{#if discount}}{{> row label='Descuento' value=(formatMoney discount currency) color=(toneColor 'success' 'fg')}}{{/if}}
+  <tr>
+    <td style="padding:18px 12px 20px 24px;border-top:2px solid {{toneColor 'brand' 'border'}};font-size:15px;font-weight:700;color:#101828;" class="em-heading">Total</td>
+    <td align="right" style="padding:18px 24px 20px 12px;border-top:2px solid {{toneColor 'brand' 'border'}};font-size:22px;line-height:28px;font-weight:800;letter-spacing:-0.01em;color:{{brand.primaryColor}};white-space:nowrap;">{{formatMoney orderTotal currency}}</td>
+  </tr>
+{{/panel}}
+
+{{#if shippingAddress}}
+  {{#> panel heading='Dirección de entrega'}}
+  <tr><td colspan="2" class="em-heading" style="padding:10px 24px 18px;font-size:14px;line-height:22px;color:#101828;">{{shippingAddress}}</td></tr>
+  {{/panel}}
+{{/if}}
+
+{{#if orderUrl}}
+  {{> button url=orderUrl text=(fallback ctaText 'Ver mi pedido')}}
+{{/if}}
+
+{{> callout tone='info' icon='local_shipping' title='¿Qué sigue?' text=(fallback nextSteps 'Te avisaremos por correo en cuanto tu pedido esté en camino.')}}
+
+{{> signature signoff='Gracias por confiar en nosotros,'}}
