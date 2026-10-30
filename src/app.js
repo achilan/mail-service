@@ -95,7 +95,9 @@ export function createApp({ config, logger, mailer, queue, store, engine }) {
     res.set('Cache-Control', 'public, max-age=31536000, immutable');
     res.set('Cross-Origin-Resource-Policy', 'cross-origin'); // los clientes webmail cargan la imagen
     if (m[2] === 'svg') return res.type('image/svg+xml').send(iconSvg(m[1], color, size));
-    return res.type('image/png').send(iconPng(m[1], color, size));
+    const png = iconPng(m[1], color, size);
+    if (!png) return next(new HttpError(503, 'icons_unavailable', 'Íconos PNG no disponibles en este servidor'));
+    return res.type('image/png').send(png);
   });
 
   if (config.features.docs) app.use(docsRouter({ config }));

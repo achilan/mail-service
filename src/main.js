@@ -5,6 +5,7 @@ import { createLogger } from './logger.js';
 import { createMailer } from './mail/mailer.js';
 import { createQueue } from './queue.js';
 import { createEngine, loadBuiltins } from './templates/engine.js';
+import { iconLoadError, iconsAvailable } from './templates/icon-render.js';
 import { createStore } from './templates/store.js';
 
 const config = loadConfig();
@@ -14,7 +15,10 @@ const { errors, warnings } = checkConfig(config);
 for (const problem of warnings) logger.warn('config.warning', { problem });
 if (errors.length) {
   for (const problem of errors) logger.error('config.invalid', { problem });
-  process.exit(1);
+  throw new Error(`configuración inválida: ${errors.join(' ')} Revisa el archivo .env (ver .env.sample).`);
+}
+if (!iconsAvailable()) {
+  logger.warn('icons.unavailable', { problem: `Íconos desactivados: ${iconLoadError()}. Ejecuta "npm ci" en este servidor para instalar el binario de @resvg/resvg-js de esta plataforma.` });
 }
 
 const builtins = await loadBuiltins(config.templatesDir);
@@ -26,6 +30,12 @@ const app = createApp({ config, logger, mailer, queue, store, engine });
 
 const server = app.listen(config.port, () => {
   logger.info('server.started', { url: `http://localhost:${config.port}`, docs: config.features.docs ? '/docs' : 'off', transport: config.mail.transport });
+});
+server.on('error', (err) => {
+  const reason = err.code === 'EADDRINUSE' ? `el puerto ${config.port} ya está en uso (¿otra instancia corriendo?)` : err.message;
+  console.log(`[mail-service] NO SE PUDO ARRANCAR: ${reason}`);
+  logger.error('server.listen_failed', { error: reason });
+  process.exit(1);
 });
 server.headersTimeout = 30_000;
 server.requestTimeout = 60_000;

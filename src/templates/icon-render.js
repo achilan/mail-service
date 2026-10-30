@@ -2,8 +2,20 @@
 // Gmail y Outlook no muestran SVG, así que en los correos se incrustan como
 // PNG a 2x (nítidos en pantallas retina) referenciados por `cid:`.
 
-import { Resvg } from '@resvg/resvg-js';
 import { ICONS } from './icons.js';
+
+// @resvg/resvg-js es un binario nativo por plataforma. Si falta (p. ej. node_modules
+// copiado desde otro sistema operativo) el servicio sigue funcionando sin íconos.
+let Resvg = null;
+let loadError = null;
+try {
+  ({ Resvg } = await import('@resvg/resvg-js'));
+} catch (err) {
+  loadError = err?.message?.split('\n')[0] || String(err);
+}
+
+export const iconsAvailable = () => Boolean(Resvg);
+export const iconLoadError = () => loadError;
 
 const HEX = /^#?([0-9a-f]{6})$/i;
 const cache = new Map();
@@ -24,6 +36,7 @@ export function iconSvg(name, color, size = 24) {
 
 // PNG con caché en memoria (las combinaciones ícono/color/tamaño son pocas).
 export function iconPng(name, color, size = 24) {
+  if (!Resvg) return null;
   const px = Math.min(Math.max(Math.round(size), 8), 128) * 2;
   const key = `${name}:${normalizeColor(color)}:${px}`;
   let png = cache.get(key);

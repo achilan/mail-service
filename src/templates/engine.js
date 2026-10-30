@@ -13,7 +13,7 @@ import { HttpError } from '../http.js';
 import { htmlToText } from '../mail/text.js';
 import { safeUrl, sanitizeMessage } from '../security/sanitize.js';
 import { CATALOG } from './catalog.js';
-import { hasIcon, iconPng, iconSvg, normalizeColor } from './icon-render.js';
+import { hasIcon, iconPng, iconsAvailable, iconSvg, normalizeColor } from './icon-render.js';
 
 const MAX_OUTPUT = 2 * 1024 * 1024;
 
@@ -102,6 +102,8 @@ function registerHelpers(hb) {
     icon(name, color, size, options) {
       const opts = [color, size, options].find((o) => o?.data);
       const root = opts?.data?.root || {};
+      // Sin rasterizador no hay PNG para incrustar: se omite el ícono en vez de romper el envío.
+      if (root._iconMode === 'cid' && !iconsAvailable()) return '';
       const n = hasIcon(name) ? name : 'mail';
       const c = normalizeColor(typeof color === 'string' ? color : root.brand?.primaryColor);
       const s = typeof size === 'number' ? Math.min(Math.max(size, 8), 128) : 24;
